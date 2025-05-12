@@ -12,15 +12,24 @@ function App() {
   const [to, setTo] = useState("");
   const [status, setStatus] = useState("Disconnected");
   const [statusMessage, setStatusMssage] = useState("");
-
+  let hasStarted = false;
+  
   useEffect(() => {
     console.log("🚀 Connecting socket...");
+
     // Check if already connected before starting a new session
-    if (!socket.connected) {
-      socket.emit("start-session", {
-        sessionId: "4e66d0b8-4f4f-4a62-9a09-59688cfaf450",
-      });
-    }
+
+    const handleConnect = () => {
+      console.log("✅ Socket connected!");
+      if (!hasStarted) {
+        socket.emit("start-session", {
+          // sessionId: "4e66d0b8-4f4f-4a62-9a09-59688cfaf450",
+          cellNumber: "923008547452",
+        });
+        hasStarted = true;
+      }
+    };
+    socket.on("connect", handleConnect);
 
     socket.on("qr", ({ qr }) => {
       console.log("📸 Received QR:", qr);
